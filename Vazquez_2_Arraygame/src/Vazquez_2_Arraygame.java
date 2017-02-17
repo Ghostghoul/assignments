@@ -3,54 +3,67 @@
 import java.util.Random;
 import java.util.Scanner;
 
-public class Vazquez_Arraygame { //oac begins here
+/**
+ *
+ * @author Isidro
+ */
+public class Vazquez_2_Arraygame { //oac begins here
     
-            
-                static Trap [] mineField = new Trap[5]; 
-         
-                   
+               
                    static char [][] landscape= new char[10][10];
+                static Enemy [] thugs = new Enemy[5]; 
+                static Chest [] heart = new Chest[2];
+
+         
+                
                   
                   
                 //must make puublic to all
                 
               public static void main(String []args) { //main begins here
               System.err.println("One @ sign attempts to run a course");
-
-                char[][] landscape = new char [10][10];
-
+                
+              char [][] landscape= new char[10][10];
+             
                 Hero bucky = new Hero (0, 0);
    
-              Random randy = new Random();
-          
-                 for (int i = 0; i < 5; i++){
-                     mineField[i] = new Trap(randy.nextInt(10),randy.nextInt(10));
-                 }
+            
                 
-                  Scanner McScanner = new Scanner(System.in);
+                  
                 System.err.println("Welcome Brave Hero!!");
                 
                 while(bucky.health>0){
                 
-        
+                 Random randy = new Random();
+                 Random ra = new Random();
+               
+                 
+                 
+                 for (int z = 0; z < 5; z++){
+                        thugs[z] = new Enemy(randy.nextInt(10), randy.nextInt(10));
+                
+                 for (int f = 0; f < 2; f++){
+                       heart[f] = new Chest(ra.nextInt(10), ra.nextInt(10));
+                 
                    
                     landscape = new char[10][10];
                     
                 
-                    System.out.println("Which direction would you like to go?");  
+                      for (int i = 0; i < 5; i++){
+                     landscape[thugs[z].y][thugs[z].x] = thugs[z].getSymbol();
+                  }
+                   for (int i = 0; i < 2; i++){
+                       landscape[heart[f].y][heart[f].x] = heart[f].getSymbol();
+                   }
+                                 
+                   Scanner McScanner = new Scanner(System.in);
+                     System.out.println("Which direction would you like to go?");  
                     String answer = McScanner.nextLine();
                    System.out.printf("You said %s .\n", answer);
                    
                    bucky.move(answer);
                     landscape[bucky.getY()][bucky.getX()] = bucky.getSymbol();
               
-                   
-
-                      for (int i = 0; i < 5; i++){
-                     landscape[mineField[i].getY()][mineField[i].getX()] = mineField[i].getSymbol();
-                  }
-                   
-       
 
                     for (int i = 0; i <= landscape[0].length - 1; i++) {
                        for (int j = 0; j <= landscape[1].length - 2; j++) { // replaced lenght from 2 to 1
@@ -63,8 +76,10 @@ public class Vazquez_Arraygame { //oac begins here
                     }
                    System.out.println("|");
                    }
+                 
                  }
-               
+                 }
+                  
                 System.out.println( "|  _ \\| ____| / \\|_   _| | | | | __ ) \\ / /\n" +
                                     "| | | |  _|   / _ \\ | | | |_| | |  _ \\\\ V / \n" +
                                     "| |_| | |___ / ___ \\| | |  _  | | |_) | | |  \n" +
@@ -77,17 +92,92 @@ public class Vazquez_Arraygame { //oac begins here
                                      "|_____/_/\\_\\_|   |_____\\___/|____/___\\___/ \\___/ \\___/ \\___/ \\___/|_| \\_|\n" +
                                      "                                                                         "
                 );
-             //main ends here
-              }
+                       //main ends here
+                 }
+                }
+              
 
+          
                 
+static class Enemy{  //trap begins here
+    int x,y;
+    boolean isActive = true;
+    char symbol = '☢';
+   
+    
+    public Enemy(int a, int b){
+        
+        this.x = a;
+        this.y = b;
+        this.symbol = '☢';
+ 
+    }
 
+        
+    int getX(){
+        return this.x;
+    }
+    int getY(){
+        return this.y;
+    }      
+    char getSymbol(){
+        return this.symbol;
+        
+    }
+    boolean getisActive(){
+        return this.isActive;
+    }
+
+      
+  
+}  
+ static class Chest {  //trap begins here
+    int x,y;
+    boolean isActive = true;
+    char symbol = '$';
+    boolean isOn;
+   
+    
+    public Chest(int c, int d){
+        
+        this.x = c;
+        this.y = d;
+        this.symbol = '$';
+ 
+    }
+
+  
+ 
+        
+    int getX(){
+        return this.x;
+    }
+    int getY(){
+        return this.y;
+    }      
+    char getSymbol(){
+        return this.symbol;
+        
+    }
+    boolean getisOn(){
+        return this.isOn;
+    }
+  
+    
+    
+      
+   
+
+   
+ // trap ends here
+    
+}
 static class Hero {  // hero begins here
     int x,y;
     char symbol = '@';
     boolean isAlive = true;
     int health;
-     
+    //boolean win = true;
         
     
     public Hero(int a, int b){
@@ -101,6 +191,10 @@ static class Hero {  // hero begins here
     int getX(){
         return this.x;
     }
+    boolean getisAlive(){
+    return this.isAlive;
+}
+            
     int getY(){
         return this.y;
     }     
@@ -121,7 +215,7 @@ static class Hero {  // hero begins here
         
     }
     void moveEast(){
-        if (this.x < 8){this.x += 1;}
+        if (this.x < 9){this.x += 1;}
         
     }
     void moveWest(){
@@ -149,137 +243,47 @@ static class Hero {  // hero begins here
             System.out.println("Prepare to move East!!");
                     this.moveEast();
                     }
-       checkforTrap();
-       
+        
+    
     }
     
-        
-       void checkforTrap(){
+        void checkforChest(){
+            for (int f = 0; f < 2; f++){
+                if (heart[f].getisOn()){
+                    if (this.getY() == heart[f].getY() && this.getX() == heart[f].getX()){
+                        this.health += 1;
+                        System.out.println(this.health);
+                        
+                    }
+                }
+            }
+       }
+       void checkforEnemy(){
             
-                         for (int i = 0; i < 5; i++){
-                       if (mineField[i].getisActive()){
-                     if (this.x == mineField[i].getX() && this.y == mineField[i].getY()){
+                         for (int z = 0; z < 5; z++){
+                       if (thugs[z].getisActive()){
+                     if (this.y == thugs[z].getY() && this.x == thugs[z].getX()){
                         
                              this.health -= 1;
                              System.out.println(this.health);
                      
-                       
+                     }   
                      
                    }
                      
-                       }
-                       }
-       }
-    
- 
-       
-} // hero ends here
-    
-static class Enemy { 
-    int x,y;
-    boolean isActive = true;
-    char symbol = '*';
-   
-    
-    public Enemy(int a, int b){
-        
-        this.x = a;
-        this.y = b;
-        this.symbol = '*';
- 
-    }
+               }
+                       
+           }
+        }
+           
+ // hero ends here
 
-        
-    int getX(){
-        return this.x;
-    }
-    int getY(){
-        return this.y;
-    }      
-    char getSymbol(){
-        return this.symbol;
-        
-    }
-    boolean getisActive(){
-        return this.isActive;
-    }
-    void beSnapped(){
-        this.isActive = false;
-    }
     
     
     
-    
-static class Trap {  //trap begins here
-    int x,y;
-    boolean isActive = true;
-    char symbol = '☢';
-   
-    
-    public Trap(int a, int b){
-        
-        this.x = a;
-        this.y = b;
-        this.symbol = '☢';
- 
-    }
-
-        
-    int getX(){
-        return this.x;
-    }
-    int getY(){
-        return this.y;
-    }      
-    char getSymbol(){
-        return this.symbol;
-        
-    }
-    boolean getisActive(){
-        return this.isActive;
-    }
-  
-    
-    static class Chest {  //trap begins here
-    int x,y;
-    boolean isActive = true;
-    char symbol = '☢';
-   
-    
-    public Chest(int a, int b){
-        
-        this.x = a;
-        this.y = b;
-        this.symbol = '$';
- 
-    }
-
-        
-    int getX(){
-        return this.x;
-    }
-    int getY(){
-        return this.y;
-    }      
-    char getSymbol(){
-        return this.symbol;
-        
-    }
-    boolean getisActive(){
-        return this.isActive;
-    }
-  
-    
-    
-      
-    
-
-   
-} // trap ends here
-    
-} // oac ends here
+ // oac ends here
 }
-}
+
 
 
 
